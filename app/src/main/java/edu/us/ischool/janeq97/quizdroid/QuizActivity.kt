@@ -4,13 +4,20 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import org.json.JSONObject
 import android.content.Intent
+import android.provider.MediaStore
 import android.widget.TextView
 import org.json.JSONArray
+import org.w3c.dom.Text
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.RadioGroup
+import android.widget.RadioButton
 
 class QuizActivity : AppCompatActivity() {
     val quizData: JSONObject = JSONObject("""{
-        |"Math" : {
-        |   "NumOfQuestions": "3",
+        |"Math": {
+        |   "NumberOfQuestions": "3",
         |   "Questions": [
         |       {
         |           "Question": "What is 2 + 2?",
@@ -79,12 +86,12 @@ class QuizActivity : AppCompatActivity() {
         |       }
         |   ]
         |},
-        |MarvelSuperHeroes: {
+        |"MarvelSuperHeroes": {
         |   "NumberOfQuestions": "3",
         |   "Questions": [
         |       {
         |           "Question": "Which of these is NOT a Marvel hero?",
-        |           "Answer": "Wonder Woman"
+        |           "Answer": "Wonder Woman",
         |           "Options": [
         |               "Wonder Woman",
         |               "Ant Man",
@@ -93,14 +100,14 @@ class QuizActivity : AppCompatActivity() {
         |           ]
         |       },
         |       {
-        |           "Question": "What is Captain Marvel's real name?"
+        |           "Question": "What is Captain Marvel's real name?",
         |           "Answer": "Carol Danvers",
-        |           "Options": {
+        |           "Options": [
         |               "Mary Jane",
         |               "Katniss Everdeen",
         |               "Susan Johnson",
         |               "Carol Danvers"
-        |           }
+        |           ]
         |       },
         |       {
         |           "Question": "What is Thor's weapon?",
@@ -115,27 +122,85 @@ class QuizActivity : AppCompatActivity() {
         |   ]
         |}
     }""".trimMargin())
-    var totalQuestions: Int = 0
+
+    var totalQuestions: Int = 3
     var numberCorrect: Int = 0
     var questionIndex: Int = 0
-
+    var currentAnswer: String = ""
+    var topicCodeName: String = ""
+    // var questions: JSONArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
         val topic = getIntent().getStringExtra("TOPIC")
-
         val topicNameView: TextView = findViewById(R.id.topic)
         topicNameView.setText(topic)
 
-        /*val topicCodeName = topic.replace("\\s".toRegex(), "")
-        totalQuestions = quizData.getJSONObject(topicCodeName).getInt("NumberOfQuestions")
-        val questions: JSONArray = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
+        topicCodeName = topic.replace("\\s".toRegex(), "")
 
+        numberCorrect = getIntent().getIntExtra("NUMBER_CORRECT", 0)
+        questionIndex = getIntent().getIntExtra("QUESTION_INDEX", 0)
+
+        displayQuestion()
+        populateOptions()
+
+        Log.i("INDEX", "$questionIndex")
+
+        val options: RadioGroup = findViewById(R.id.radio_group)
+        options.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener({group, checkedId ->
+            val checked: RadioButton = findViewById(checkedId)
+            currentAnswer = checked.text.toString()
+        }))
+    }
+
+    fun populateOptions() {
+        val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
+        val options = questions.getJSONObject(questionIndex).getJSONArray("Options")
+
+        val option1: RadioButton = findViewById(R.id.option1)
+        val option2: RadioButton = findViewById(R.id.option2)
+        val option3: RadioButton = findViewById(R.id.option3)
+        val option4: RadioButton = findViewById(R.id.option4)
+
+        option1.setText(options[0].toString())
+        option2.setText(options[1].toString())
+        option3.setText(options[2].toString())
+        option4.setText(options[3].toString())
+    }
+
+    fun displayQuestion() {
+        val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
         val questionView: TextView = findViewById(R.id.question)
-        var firstQuestion: JSONObject = questions[0] as JSONObject
-        questionView.setText(firstQuestion.get("Question") as String)*/
+        val question = questions.getJSONObject(questionIndex).get("Question")
+        questionView.setText("$question")
+    }
 
+    fun handleSubmit(view: View) {
+        if (currentAnswer != "") {
+            val topic = getIntent().getStringExtra("TOPIC")
+            val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
+            val answer = questions.getJSONObject(questionIndex).get("Answer")
+            var isCorrect = false
+            if (answer == currentAnswer) {
+                numberCorrect = numberCorrect + 1
+                isCorrect = true
+            }
+            val intent = Intent(this, AnswerActivity::class.java)
+            intent.putExtra("QUESTION_INDEX", questionIndex)
+            intent.putExtra("NUMBER_CORRECT", numberCorrect)
+            if (isCorrect) {
+                intent.putExtra("RESULT", "Correct!")
+            } else {
+                intent.putExtra("RESULT", "Incorrect!")
+            }
+            intent.putExtra("TOTAL_QUESTIONS", totalQuestions)
+            intent.putExtra("TOPIC", topic)
+
+            intent.putExtra("CORRECT_ANSWER", answer.toString())
+            intent.putExtra("YOUR_ANSWER", currentAnswer)
+            startActivity(intent)
+        }
     }
 }
