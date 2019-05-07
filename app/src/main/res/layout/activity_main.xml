@@ -6,13 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
-
-    <fragment
-            android:layout_width="0dp"
-            android:layout_height="0dp" android:name="edu.us.ischool.janeq97.quizdroid.QuizMenuFragment"
-            android:id="@+id/main_fragment"
+    <FrameLayout
+            android:layout_width="395dp"
+            android:layout_height="715dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout="@layout/fragment_quiz_menu"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="70dp" android:id="@+id/frame">
+
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

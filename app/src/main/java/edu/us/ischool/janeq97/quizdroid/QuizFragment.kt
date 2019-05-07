@@ -5,9 +5,15 @@ import android.view.View
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.json.JSONObject
+import android.widget.RadioButton
+import android.widget.TextView
+import android.widget.RadioGroup
+import android.widget.Button
+import android.content.Context
 
 class QuizFragment : Fragment() {
-    /*val quizData: JSONObject = JSONObject("""{
+    val quizData: JSONObject = JSONObject("""{
         |"Math": {
         |   "NumberOfQuestions": "3",
         |   "Questions": [
@@ -115,58 +121,77 @@ class QuizFragment : Fragment() {
         |}
     }""".trimMargin())
 
-    var totalQuestions: Int = 3
-    var numberCorrect: Int = 0
-    var questionIndex: Int = 0
-    var currentAnswer: String = ""
-    var topicCodeName: String = ""*/
+    companion object {
+
+        fun newInstance(topic: String, index: Int, numCorrect: Int): QuizFragment {
+            val fragment = QuizFragment()
+
+            val bundle = Bundle().apply {
+                putString("TOPIC", topic)
+                putInt("QUESTION_INDEX", index)
+                putInt("NUM_CORRECT", numCorrect)
+            }
+
+            fragment.arguments = bundle
+
+            return fragment
+        }
+    }
+
+    var activityCommander: QuizFragmentListener? = null
+
+    interface QuizFragmentListener {
+        fun submitAnswer(result: String, yourAnswer: String, answer: String,
+                         questionIndex: Int, numCorrect: Int, totalQuestions: Int,
+                         topic: String)
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            activityCommander = context as QuizFragmentListener
+        } catch(e: ClassCastException) {
+            throw ClassCastException(context.toString())
+        }
+    }
+
+
+    var numCorrect = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_quiz, container, false)
+        var topic = arguments!!.getString("TOPIC")
+
+        val questionIndex = arguments!!.getInt("QUESTION_INDEX", 0)
+        numCorrect = arguments!!.getInt("NUM_CORRECT", 0)
+        val topicCodeName = topic.replace("\\s".toRegex(), "")
+        var currentAnswer = ""
+
+        displayQuestion(topicCodeName, view, questionIndex)
+        populateOptions(topicCodeName, view, questionIndex)
+
+        val options: RadioGroup = view.findViewById(R.id.radio_group)
+        options.setOnCheckedChangeListener {_, checkedId ->
+            val checked: RadioButton = view.findViewById(checkedId)
+            currentAnswer = checked.text.toString()
+        }
+
+        view.findViewById<Button>(R.id.submit).setOnClickListener {
+                _ -> handleSubmit(currentAnswer, topicCodeName, questionIndex, topic)
+        }
+
         return view
     }
 
-    /*constructor(parcel: Parcel) : this() {
-        totalQuestions = parcel.readInt()
-        numberCorrect = parcel.readInt()
-        questionIndex = parcel.readInt()
-        currentAnswer = parcel.readString()
-        topicCodeName = parcel.readString()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_quiz)
-
-        val topic = getIntent().getStringExtra("TOPIC")
-        val topicNameView: TextView = findViewById(R.id.topic)
-        topicNameView.setText(topic)
-
-        topicCodeName = topic.replace("\\s".toRegex(), "")
-
-        numberCorrect = getIntent().getIntExtra("NUMBER_CORRECT", 0)
-        questionIndex = getIntent().getIntExtra("QUESTION_INDEX", 0)
-
-        displayQuestion()
-        populateOptions()
-
-        Log.i("INDEX", "$questionIndex")
-
-        val options: RadioGroup = findViewById(R.id.radio_group)
-        options.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener({group, checkedId ->
-            val checked: RadioButton = findViewById(checkedId)
-            currentAnswer = checked.text.toString()
-        }))
-    }
-
-    fun populateOptions() {
+    fun populateOptions(topicCodeName: String, view: View, questionIndex: Int) {
         val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
         val options = questions.getJSONObject(questionIndex).getJSONArray("Options")
 
-        val option1: RadioButton = findViewById(R.id.option1)
-        val option2: RadioButton = findViewById(R.id.option2)
-        val option3: RadioButton = findViewById(R.id.option3)
-        val option4: RadioButton = findViewById(R.id.option4)
+        val option1: RadioButton = view.findViewById(R.id.option1)
+        val option2: RadioButton = view.findViewById(R.id.option2)
+        val option3: RadioButton = view.findViewById(R.id.option3)
+        val option4: RadioButton = view.findViewById(R.id.option4)
 
         option1.setText(options[0].toString())
         option2.setText(options[1].toString())
@@ -174,59 +199,27 @@ class QuizFragment : Fragment() {
         option4.setText(options[3].toString())
     }
 
-    fun displayQuestion() {
+    fun displayQuestion(topicCodeName: String, view: View, questionIndex: Int) {
         val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
-        val questionView: TextView = findViewById(R.id.question)
+        val questionView: TextView = view.findViewById(R.id.question)
         val question = questions.getJSONObject(questionIndex).get("Question")
         questionView.setText("$question")
     }
 
-    fun handleSubmit(view: View) {
+    fun handleSubmit(currentAnswer: String, topicCodeName: String, questionIndex: Int, topic: String) {
         if (currentAnswer != "") {
-            val topic = getIntent().getStringExtra("TOPIC")
             val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
-            val answer = questions.getJSONObject(questionIndex).get("Answer")
-            var isCorrect = false
+            val answer = questions.getJSONObject(questionIndex).get("Answer") as String
+            var result = ""
             if (answer == currentAnswer) {
-                numberCorrect = numberCorrect + 1
-                isCorrect = true
-            }
-            val intent = Intent(this, AnswerFragment::class.java)
-            intent.putExtra("QUESTION_INDEX", questionIndex)
-            intent.putExtra("NUMBER_CORRECT", numberCorrect)
-            if (isCorrect) {
-                intent.putExtra("RESULT", "Correct!")
+                numCorrect = numCorrect + 1
+                result = "CORRECT"
             } else {
-                intent.putExtra("RESULT", "Incorrect!")
+                result = "INCORRECT"
             }
-            intent.putExtra("TOTAL_QUESTIONS", totalQuestions)
-            intent.putExtra("TOPIC", topic)
 
-            intent.putExtra("CORRECT_ANSWER", answer.toString())
-            intent.putExtra("YOUR_ANSWER", currentAnswer)
-            startActivity(intent)
+            activityCommander?.submitAnswer(result, currentAnswer, answer, questionIndex,
+                numCorrect, 3, topic)
         }
     }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(totalQuestions)
-        parcel.writeInt(numberCorrect)
-        parcel.writeInt(questionIndex)
-        parcel.writeString(currentAnswer)
-        parcel.writeString(topicCodeName)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<QuizFragment> {
-        override fun createFromParcel(parcel: Parcel): QuizFragment {
-            return QuizFragment(parcel)
-        }
-
-        override fun newArray(size: Int): Array<QuizFragment?> {
-            return arrayOfNulls(size)
-        }
-    }*/
 }

@@ -5,58 +5,88 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Button
+import android.content.Context
 
 class AnswerFragment : Fragment() {
 
+    // (result: String, yourAnswer: String, answer: String,
+    //                     questionIndex: Int, numCorrect: Int, totalQuestions: Int,
+    //                     topic: String)
+
+    companion object {
+
+        fun newInstance(result: String, yourAnswer: String, answer: String,
+                        questionIndex: Int, numCorrect: Int, totalQuestions: Int,
+                        topic: String): AnswerFragment {
+            val fragment = AnswerFragment()
+
+            val bundle = Bundle().apply {
+                putString("TOPIC", topic)
+                putString("YOUR_ANSWER", yourAnswer)
+                putString("ANSWER", answer)
+                putInt("QUESTION_INDEX", questionIndex)
+                putInt("NUM_CORRECT", numCorrect)
+                putInt("TOTAL_QUESTIONS", totalQuestions)
+                putString("RESULT", result)
+            }
+
+            fragment.arguments = bundle
+
+            return fragment
+        }
+    }
+
+    interface AnswerFragmentListener{
+        fun continueQuiz(topic: String, numCorrect: Int, questionIndex: Int, totalQuestions: Int)
+    }
+
+    var activityCommander: AnswerFragmentListener? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try {
+            activityCommander = context as AnswerFragmentListener
+        } catch(e: ClassCastException) {
+            throw ClassCastException(context.toString())
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_answer, container, false)
+        var topic = arguments!!.getString("TOPIC")
+        val yourAnswer = arguments!!.getString("YOUR_ANSWER")
+        val answer = arguments!!.getString("ANSWER")
+        var questionIndex = arguments!!.getInt("QUESTION_INDEX")
+        var numCorrect = arguments!!.getInt("NUM_CORRECT")
+        var totalQuestions = arguments!!.getInt("TOTAL_QUESTIONS")
+        var result = arguments!!.getString("RESULT")
+
+        val resultView: TextView = view.findViewById(R.id.result)
+        resultView.setText(result)
+
+        val correctAnswerView: TextView = view.findViewById(R.id.correct_answer)
+        correctAnswerView.setText("Correct Answer: $answer")
+
+        val yourAnswerView: TextView = view.findViewById(R.id.your_answer)
+        yourAnswerView.setText("Your answer: $yourAnswer")
+
+        val numberCorrectView: TextView = view.findViewById(R.id.number_correct)
+        numberCorrectView.setText("You have $numCorrect out of $totalQuestions correct.")
+
+        val nextBtn: Button = view.findViewById(R.id.next)
+        if (questionIndex == totalQuestions - 1) {
+            nextBtn.setText("Finish")
+        }
+        nextBtn.setOnClickListener { _ -> handleNext(topic, numCorrect, questionIndex, totalQuestions) }
+
         return view
     }
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_answer)
+    fun handleNext(topic: String, numberCorrect: Int, questionIndex: Int,
+        numberOfQuestions: Int) {
+        activityCommander?.continueQuiz(topic, numberCorrect, questionIndex + 1, numberOfQuestions)
 
-        val numberCorrect = getIntent().getIntExtra("NUMBER_CORRECT", 0)
-        val numberOfQuestions = getIntent().getIntExtra("TOTAL_QUESTIONS", 0)
-        val questionIndex = getIntent().getIntExtra("QUESTION_INDEX", 0)
-        val result = getIntent().getStringExtra("RESULT")
-        val correctAnswer = getIntent().getStringExtra("CORRECT_ANSWER")
-        val yourAnswer = getIntent().getStringExtra("YOUR_ANSWER")
-
-        val resultView: TextView = findViewById(R.id.result)
-        resultView.setText(result)
-
-        val correctAnswerView: TextView = findViewById(R.id.correct_answer)
-        correctAnswerView.setText("Correct Answer: $correctAnswer")
-
-        val yourAnswerView: TextView = findViewById(R.id.your_answer)
-        yourAnswerView.setText("Your answer: $yourAnswer")
-
-        val numberCorrectView: TextView = findViewById(R.id.number_correct)
-        numberCorrectView.setText("You have $numberCorrect out of $numberOfQuestions correct.")
-
-        if (questionIndex == numberOfQuestions - 1) {
-            val nextBtn: Button = findViewById(R.id.next)
-            nextBtn.setText("Finish")
-        }
     }
-
-    fun handleNext(view: View) {
-        val topic = getIntent().getStringExtra("TOPIC")
-        val numberCorrect = getIntent().getIntExtra("NUMBER_CORRECT", 0)
-        val questionIndex = getIntent().getIntExtra("QUESTION_INDEX", 0) + 1
-        val numberOfQuestions = getIntent().getIntExtra("TOTAL_QUESTIONS", 0)
-
-        if (questionIndex < numberOfQuestions) {
-            val intent = Intent(this, QuizFragment::class.java)
-            intent.putExtra("TOPIC", topic)
-            intent.putExtra("NUMBER_CORRECT", numberCorrect)
-            intent.putExtra("QUESTION_INDEX", questionIndex)
-            startActivity(intent)
-        } else {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-    }*/
 }
