@@ -1,21 +1,13 @@
 package edu.us.ischool.janeq97.quizdroid
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import org.json.JSONObject
-import android.content.Intent
-import android.provider.MediaStore
-import android.widget.TextView
-import org.json.JSONArray
-import org.w3c.dom.Text
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.RadioGroup
-import android.widget.RadioButton
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.ViewGroup
 
-class QuizActivity : AppCompatActivity() {
-    val quizData: JSONObject = JSONObject("""{
+class QuizFragment : Fragment() {
+    /*val quizData: JSONObject = JSONObject("""{
         |"Math": {
         |   "NumberOfQuestions": "3",
         |   "Questions": [
@@ -127,12 +119,24 @@ class QuizActivity : AppCompatActivity() {
     var numberCorrect: Int = 0
     var questionIndex: Int = 0
     var currentAnswer: String = ""
-    var topicCodeName: String = ""
-    // var questions: JSONArray? = null
+    var topicCodeName: String = ""*/
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.fragment_quiz, container, false)
+        return view
+    }
+
+    /*constructor(parcel: Parcel) : this() {
+        totalQuestions = parcel.readInt()
+        numberCorrect = parcel.readInt()
+        questionIndex = parcel.readInt()
+        currentAnswer = parcel.readString()
+        topicCodeName = parcel.readString()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_quiz)
+        setContentView(R.layout.fragment_quiz)
 
         val topic = getIntent().getStringExtra("TOPIC")
         val topicNameView: TextView = findViewById(R.id.topic)
@@ -187,7 +191,7 @@ class QuizActivity : AppCompatActivity() {
                 numberCorrect = numberCorrect + 1
                 isCorrect = true
             }
-            val intent = Intent(this, AnswerActivity::class.java)
+            val intent = Intent(this, AnswerFragment::class.java)
             intent.putExtra("QUESTION_INDEX", questionIndex)
             intent.putExtra("NUMBER_CORRECT", numberCorrect)
             if (isCorrect) {
@@ -203,4 +207,26 @@ class QuizActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(totalQuestions)
+        parcel.writeInt(numberCorrect)
+        parcel.writeInt(questionIndex)
+        parcel.writeString(currentAnswer)
+        parcel.writeString(topicCodeName)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<QuizFragment> {
+        override fun createFromParcel(parcel: Parcel): QuizFragment {
+            return QuizFragment(parcel)
+        }
+
+        override fun newArray(size: Int): Array<QuizFragment?> {
+            return arrayOfNulls(size)
+        }
+    }*/
 }

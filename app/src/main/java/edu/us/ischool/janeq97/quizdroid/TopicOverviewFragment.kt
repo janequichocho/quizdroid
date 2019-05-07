@@ -1,14 +1,19 @@
 package edu.us.ischool.janeq97.quizdroid
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import org.json.JSONObject
-import android.content.Intent
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.ViewGroup
 
-class TopicOverviewActivity : AppCompatActivity() {
-    val quizData: JSONObject = JSONObject("""{
+class TopicOverviewFragment : Fragment() {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.fragment_topic_overview, container, false)
+        return view
+    }
+
+    /*val quizData: JSONObject = JSONObject("""{
         "Math": {
             "Description": "This quiz covers advanced topics such as addition, subtraction, multiplication, and division.",
             "NumberOfQuestions": "3"
@@ -27,7 +32,7 @@ class TopicOverviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_topic_overview)
+        setContentView(R.layout.fragment_topic_overview)
 
         val topic = getIntent().getStringExtra("TOPIC")
         val topicTextView: TextView = findViewById(R.id.topic)
@@ -46,9 +51,9 @@ class TopicOverviewActivity : AppCompatActivity() {
     }
 
     fun beginQuiz(view: View) {
-        val intent = Intent(this, QuizActivity::class.java)
+        val intent = Intent(this, QuizFragment::class.java)
         intent.putExtra("TOPIC", topicName)
         startActivity(intent)
-    }
+    }*/
 
 }

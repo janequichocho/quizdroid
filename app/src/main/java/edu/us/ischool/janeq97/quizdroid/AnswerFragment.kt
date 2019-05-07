@@ -1,18 +1,21 @@
 package edu.us.ischool.janeq97.quizdroid
 
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import org.w3c.dom.Text
+import android.view.ViewGroup
 
-class AnswerActivity : AppCompatActivity() {
+class AnswerFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.fragment_answer, container, false)
+        return view
+    }
+
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_answer)
+        setContentView(R.layout.fragment_answer)
 
         val numberCorrect = getIntent().getIntExtra("NUMBER_CORRECT", 0)
         val numberOfQuestions = getIntent().getIntExtra("TOTAL_QUESTIONS", 0)
@@ -46,7 +49,7 @@ class AnswerActivity : AppCompatActivity() {
         val numberOfQuestions = getIntent().getIntExtra("TOTAL_QUESTIONS", 0)
 
         if (questionIndex < numberOfQuestions) {
-            val intent = Intent(this, QuizActivity::class.java)
+            val intent = Intent(this, QuizFragment::class.java)
             intent.putExtra("TOPIC", topic)
             intent.putExtra("NUMBER_CORRECT", numberCorrect)
             intent.putExtra("QUESTION_INDEX", questionIndex)
@@ -55,5 +58,5 @@ class AnswerActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-    }
+    }*/
 }

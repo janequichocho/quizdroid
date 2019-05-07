@@ -7,18 +7,22 @@ import android.content.Intent
 import android.widget.Button
 import android.util.Log
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), QuizMenuFragment.QuizMenuFragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-    fun goToTopicOverview(view: View) {
+    override fun goToTopicOverview(topic: String) {
+        Log.i("TEST", topic)
+    }
+
+    /*fun goToTopicOverview(view: View) {
         val button: Button = view as Button
-        val intent = Intent(this, TopicOverviewActivity::class.java)
+        val intent = Intent(this, TopicOverviewFragment::class.java)
         var topic: String = button.text.toString()
         intent.putExtra("TOPIC", topic)
         startActivity(intent)
-    }
+    }*/
 }
