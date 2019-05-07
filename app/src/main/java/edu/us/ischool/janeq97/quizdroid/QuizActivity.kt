@@ -1,5 +1,6 @@
 package edu.us.ischool.janeq97.quizdroid
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,8 +12,9 @@ class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFra
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
-
-        replaceFragment(QuizMenuFragment())
+        val topic = intent.getStringExtra("TOPIC")
+        val overviewFragment = TopicOverviewFragment.newInstance(topic)
+        replaceFragment(overviewFragment)
     }
 
 
@@ -43,8 +45,8 @@ class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFra
                 numCorrect)
             replaceFragment(quizFragment)
         } else {
-            val quizSelectionFragment = QuizMenuFragment()
-            replaceFragment(quizSelectionFragment)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 }
