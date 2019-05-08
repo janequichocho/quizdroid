@@ -8,13 +8,19 @@ import android.support.v4.app.Fragment
 class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFragmentListener,
     QuizFragment.QuizFragmentListener, AnswerFragment.AnswerFragmentListener {
 
+    var data = mutableListOf<Topic>()
+    var topicMap = mapOf("Math" to 0, "Physics" to 1, "Marvel Super Heroes" to 2)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
+        data = QuizApp.getRepositoryData()
+
         val topic = intent.getStringExtra("TOPIC")
         val overviewFragment = TopicOverviewFragment.newInstance(topic)
         replaceFragment(overviewFragment)
+
     }
 
 

@@ -4,8 +4,11 @@ import android.app.Application
 import android.util.Log
 import org.json.JSONArray
 
-object QuizApp: Application() {
-    val quizData: JSONArray = JSONArray("""[
+class QuizApp: Application() {
+
+    companion object {
+        var data = mutableListOf<Topic>()
+        val quizData: JSONArray = JSONArray("""[
         |{
         |   "Topic": "Math",
         |   "LongDescription": "This quiz covers advanced topics such as addition, subtraction, multiplication, and division.",
@@ -121,23 +124,29 @@ object QuizApp: Application() {
         |}
     ]""".trimMargin())
 
+        fun getRepositoryData(): MutableList<Topic> {
+            data = QuizDatabase().initializeData(quizData)
+            return data
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
-
+        Log.i("TEST", "QuizApp created")
     }
+
 }
 
 class Topic(val title: String, val shortDescr: String, val longDescr: String, val quiz: List<Quiz>) {}
-class Quiz(val question: String, val options: Array<String>, val correctIndex: Int) {}
+class Quiz(val question: String, val options: Any, val correctIndex: Int) {}
 
 interface TopicRepository {
-    var topics: MutableList<Topic>
+    fun initializeData(quizData: JSONArray): MutableList<Topic>
 }
 
 class QuizDatabase: TopicRepository {
-    override var topics = mutableListOf<Topic>()
-    fun initializeData(quizData: JSONArray) {
+    override fun initializeData(quizData: JSONArray): MutableList<Topic> {
+        var topics = mutableListOf<Topic>()
         // Create topics
         for (i in 0..(quizData.length() - 1)) {
             val topicName = quizData.getJSONObject(i).get("Topic") as String
@@ -148,10 +157,12 @@ class QuizDatabase: TopicRepository {
             for (i in 0..(quizQuestions.length() - 1)) {
                 val question = quizQuestions.getJSONObject(i).get("Question") as String
                 val answer = quizQuestions.getJSONObject(i).getInt("Answer")
-                val options = quizQuestions.getJSONObject(i).get("Options") as Array<String>
+                val options = quizQuestions.getJSONObject(i).get("Options")
+
                 formattedQuestions.add(Quiz(question, options, answer))
             }
             topics.add(Topic(topicName, shortDescription, longDescription, formattedQuestions))
         }
+        return topics
     }
 }
