@@ -4,21 +4,22 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 
 class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFragmentListener,
     QuizFragment.QuizFragmentListener, AnswerFragment.AnswerFragmentListener {
 
     var data = mutableListOf<Topic>()
-    var topicMap = mapOf("Math" to 0, "Physics" to 1, "Marvel Super Heroes" to 2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
-        data = QuizApp.getRepositoryData()
+        val jsonFile = assets.open("questions.json")
+        data = QuizApp.getRepositoryData(jsonFile)
 
         val topic = intent.getStringExtra("TOPIC")
-        val overviewFragment = TopicOverviewFragment.newInstance(topic)
+        val overviewFragment = TopicOverviewFragment.newInstance(topic, data)
         replaceFragment(overviewFragment)
 
     }

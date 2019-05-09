@@ -12,14 +12,17 @@ import android.util.Log
 import android.widget.Button
 
 class TopicOverviewFragment : Fragment() {
+    var topicMap = mapOf("Math" to 0, "Physics" to 1, "Marvel Super Heroes" to 2)
+
     companion object {
         const val ARG_NAME = "TOPIC"
 
-        fun newInstance(topic: String): TopicOverviewFragment {
+        fun newInstance(topic: String, quizData: MutableList<Topic>): TopicOverviewFragment {
             val fragment = TopicOverviewFragment()
 
             val bundle = Bundle().apply {
                 putString(ARG_NAME, topic)
+                
             }
 
             fragment.arguments = bundle

@@ -3,6 +3,11 @@ package edu.us.ischool.janeq97.quizdroid
 import android.app.Application
 import android.util.Log
 import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.io.InputStream
+import com.google.gson.Gson
+
 
 class QuizApp: Application() {
 
@@ -124,8 +129,9 @@ class QuizApp: Application() {
         |}
     ]""".trimMargin())
 
-        fun getRepositoryData(): MutableList<Topic> {
-            data = QuizDatabase().initializeData(quizData)
+        fun getRepositoryData(jsonFile: InputStream): MutableList<Topic> {
+            data = QuizDatabase().initializeData(jsonFile)
+
             return data
         }
     }
@@ -141,11 +147,28 @@ class Topic(val title: String, val shortDescr: String, val longDescr: String, va
 class Quiz(val question: String, val options: Any, val correctIndex: Int) {}
 
 interface TopicRepository {
-    fun initializeData(quizData: JSONArray): MutableList<Topic>
+    fun initializeData(jsonFile: InputStream): MutableList<Topic>
+}
+
+fun readJSONFromAsset(jsonFile: InputStream): String? {
+    var json: String? = ""
+    try {
+        json = jsonFile.bufferedReader().use{it.readText()}
+
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        return null
+    }
+    return json
 }
 
 class QuizDatabase: TopicRepository {
-    override fun initializeData(quizData: JSONArray): MutableList<Topic> {
+    override fun initializeData(jsonFile: InputStream): MutableList<Topic> {
+
+        // val listOfStrings = Gson().fromJson(readJSONFromAsset(jsonFile), mutableListOf<String>().javaClass)
+        // Log.i("TEST", listOfStrings[0])
+        var quizData = JSONArray("${readJSONFromAsset(jsonFile)}")
+
         var topics = mutableListOf<Topic>()
         // Create topics
         for (i in 0..(quizData.length() - 1)) {
