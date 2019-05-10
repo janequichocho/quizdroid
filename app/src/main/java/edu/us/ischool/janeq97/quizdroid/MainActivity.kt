@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 
 class MainActivity : AppCompatActivity(), QuizMenuFragment.QuizMenuFragmentListener {
 
@@ -26,5 +28,16 @@ class MainActivity : AppCompatActivity(), QuizMenuFragment.QuizMenuFragmentListe
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frame, fragment)
         transaction.commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val i = Intent(this, Preference::class.java)
+        startActivity(i)
+        return true
     }
 }

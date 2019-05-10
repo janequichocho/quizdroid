@@ -11,6 +11,8 @@
             android:theme="@style/AppTheme">
         <activity android:name=".QuizActivity">
         </activity>
+        <activity android:name=".Preference"></activity>
+
         <activity android:name=".AnswerFragment">
         </activity>
         <activity android:name=".QuizFragment">
@@ -18,6 +20,7 @@
         <activity android:name=".TopicOverviewFragment">
         </activity>
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
