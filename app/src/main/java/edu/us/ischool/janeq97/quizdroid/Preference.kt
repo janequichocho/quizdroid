@@ -10,10 +10,10 @@ class Preference: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preference)
 
-//        val btnPreference = findViewById<Button>(R.id.btnPreference)
-//        btnPreference.setOnClickListener() {
-//            val intent = Intent(this,MainActivity::class.java)
-//            startActivity(intent)
-//        }
+        val btnPreference = findViewById<Button>(R.id.btnPreference)
+        btnPreference.setOnClickListener() {
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

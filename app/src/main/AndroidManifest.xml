@@ -9,12 +9,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity
-                android:name=".SettingsActivity"
-                android:label="@string/title_activity_settings">
-        </activity>
         <activity android:name=".QuizActivity">
         </activity>
+        <activity android:name=".Preference"></activity>
+
         <activity android:name=".AnswerFragment">
         </activity>
         <activity android:name=".QuizFragment">
@@ -22,6 +20,7 @@
         <activity android:name=".TopicOverviewFragment">
         </activity>
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
