@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/preferenceLayout" android:orientation="vertical">
+    <EditText android:layout_height="wrap_content" android:id="@+id/editURL" android:layout_width="match_parent"
+              android:hint="JSONURL" android:gravity="center" android:inputType="textUri"/>
+    <EditText android:layout_height="wrap_content" android:id="@+id/EditDownload" android:layout_width="match_parent"
+              android:inputType="number"
+              android:hint="Download Frequency" android:gravity="center"/>
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/btnPreference" android:text="Save"/>
+</LinearLayout>
