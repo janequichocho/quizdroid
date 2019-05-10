@@ -1,6 +1,5 @@
 [
-  {
-    "Topic": "Math",
+  {"Topic": "Math",
    "LongDescription": "This quiz covers advanced topics such as addition, subtraction, multiplication, and division.",
    "ShortDescription": "Various math topics",
    "NumberOfQuestions": "3",
