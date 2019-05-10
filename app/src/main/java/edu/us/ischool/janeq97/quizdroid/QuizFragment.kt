@@ -5,131 +5,28 @@ import android.view.View
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import org.json.JSONObject
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.RadioGroup
 import android.widget.Button
 import android.content.Context
+import org.w3c.dom.Text
 
 class QuizFragment : Fragment() {
-    val quizData: JSONObject = JSONObject("""{
-        |"Math": {
-        |   "NumberOfQuestions": "3",
-        |   "Questions": [
-        |       {
-        |           "Question": "What is 2 + 2?",
-        |           "Answer": "4",
-        |           "Options": [
-        |               "2",
-        |               "8",
-        |               "4",
-        |               "13"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "What is 5 * 4?",
-        |           "Answer": "20",
-        |           "Options": [
-        |               "9",
-        |               "25",
-        |               "1",
-        |               "20"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "What is 14 - 7?",
-        |           "Answer": "7",
-        |           "Options": [
-        |               "7",
-        |               "21",
-        |               "100",
-        |               "4"
-        |           ]
-        |       }
-        |   ]
-        |},
-        |"Physics": {
-        |   "NumberOfQuestions": "3",
-        |   "Questions": [
-        |       {
-        |           "Question": "What is light?",
-        |           "Answer": "a wave",
-        |           "Options": [
-        |               "a particle",
-        |               "a wave",
-        |               "an energy",
-        |               "fire"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "How fast does light travel?",
-        |           "Answer": "299,792,458 m/s",
-        |           "Options": [
-        |               "299,792,458 m/s",
-        |               "466,467,938 m/s",
-        |               "~1 million mph",
-        |               "552,375 mph"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "What is the unit of measurement for force?",
-        |           "Answer": "Newtons",
-        |           "Options": [
-        |               "grams",
-        |               "Newtons",
-        |               "Moles",
-        |               "Kelvin"
-        |           ]
-        |       }
-        |   ]
-        |},
-        |"MarvelSuperHeroes": {
-        |   "NumberOfQuestions": "3",
-        |   "Questions": [
-        |       {
-        |           "Question": "Which of these is NOT a Marvel hero?",
-        |           "Answer": "Wonder Woman",
-        |           "Options": [
-        |               "Wonder Woman",
-        |               "Ant Man",
-        |               "Spiderman",
-        |               "Thor"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "What is Captain Marvel's real name?",
-        |           "Answer": "Carol Danvers",
-        |           "Options": [
-        |               "Mary Jane",
-        |               "Katniss Everdeen",
-        |               "Susan Johnson",
-        |               "Carol Danvers"
-        |           ]
-        |       },
-        |       {
-        |           "Question": "What is Thor's weapon?",
-        |           "Answer": "a hammer",
-        |           "Options": [
-        |               "a hammer",
-        |               "a sword",
-        |               "a whip",
-        |               "nunchucks"
-        |           ]
-        |       }
-        |   ]
-        |}
-    }""".trimMargin())
 
     companion object {
+        var topicMap = mapOf("Math" to 0, "Physics" to 1, "Marvel Super Heroes" to 2)
 
-        fun newInstance(topic: String, index: Int, numCorrect: Int): QuizFragment {
+        fun newInstance(topic: String, index: Int, numCorrect: Int, quizData: MutableList<Topic>): QuizFragment {
             val fragment = QuizFragment()
 
             val bundle = Bundle().apply {
                 putString("TOPIC", topic)
                 putInt("QUESTION_INDEX", index)
                 putInt("NUM_CORRECT", numCorrect)
+                putStringArrayList("OPTIONS", quizData[(topicMap.get(topic) as Int)].quiz[index].options)
+                putString("QUESTION", quizData[(topicMap.get(topic) as Int)].quiz[index].question)
+                putInt("CORRECT_INDEX", quizData[(topicMap.get(topic) as Int)].quiz[index].correctIndex)
             }
 
             fragment.arguments = bundle
@@ -163,13 +60,19 @@ class QuizFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_quiz, container, false)
         var topic = arguments!!.getString("TOPIC")
 
+        val topicView: TextView = view.findViewById(R.id.topic)
+        topicView.setText(topic)
+
         val questionIndex = arguments!!.getInt("QUESTION_INDEX", 0)
         numCorrect = arguments!!.getInt("NUM_CORRECT", 0)
-        val topicCodeName = topic.replace("\\s".toRegex(), "")
+
         var currentAnswer = ""
 
-        displayQuestion(topicCodeName, view, questionIndex)
-        populateOptions(topicCodeName, view, questionIndex)
+        val question = arguments!!.getString("QUESTION")
+        displayQuestion(view, question)
+
+        val optionsList = arguments!!.getStringArrayList("OPTIONS")
+        populateOptions(view, optionsList)
 
         val options: RadioGroup = view.findViewById(R.id.radio_group)
         options.setOnCheckedChangeListener {_, checkedId ->
@@ -177,39 +80,37 @@ class QuizFragment : Fragment() {
             currentAnswer = checked.text.toString()
         }
 
+        val correctIndex = arguments!!.getInt("CORRECT_INDEX")
+
         view.findViewById<Button>(R.id.submit).setOnClickListener {
-                _ -> handleSubmit(currentAnswer, topicCodeName, questionIndex, topic)
+                _ -> handleSubmit(currentAnswer, questionIndex, topic, optionsList[correctIndex])
         }
 
         return view
     }
 
-    fun populateOptions(topicCodeName: String, view: View, questionIndex: Int) {
-        val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
-        val options = questions.getJSONObject(questionIndex).getJSONArray("Options")
+    fun populateOptions(view: View, options: ArrayList<String>) {
+
 
         val option1: RadioButton = view.findViewById(R.id.option1)
         val option2: RadioButton = view.findViewById(R.id.option2)
         val option3: RadioButton = view.findViewById(R.id.option3)
         val option4: RadioButton = view.findViewById(R.id.option4)
 
-        option1.setText(options[0].toString())
-        option2.setText(options[1].toString())
-        option3.setText(options[2].toString())
-        option4.setText(options[3].toString())
+        option1.setText(options[0])
+        option2.setText(options[1])
+        option3.setText(options[2])
+        option4.setText(options[3])
     }
 
-    fun displayQuestion(topicCodeName: String, view: View, questionIndex: Int) {
-        val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
+    fun displayQuestion(view: View, question: String) {
         val questionView: TextView = view.findViewById(R.id.question)
-        val question = questions.getJSONObject(questionIndex).get("Question")
         questionView.setText("$question")
     }
 
-    fun handleSubmit(currentAnswer: String, topicCodeName: String, questionIndex: Int, topic: String) {
+    fun handleSubmit(currentAnswer: String, questionIndex: Int, topic: String, answer: String) {
         if (currentAnswer != "") {
-            val questions = quizData.getJSONObject(topicCodeName).getJSONArray("Questions")
-            val answer = questions.getJSONObject(questionIndex).get("Answer") as String
+
             var result = ""
             if (answer == currentAnswer) {
                 numCorrect = numCorrect + 1

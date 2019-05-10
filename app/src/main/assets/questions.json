@@ -1,14 +1,10 @@
-[
-  {
-    "Topic": "Math",
-   "LongDescription": "This quiz covers advanced topics such as addition, subtraction, multiplication, and division.",
-   "ShortDescription": "Various math topics",
-   "NumberOfQuestions": "3",
-   "Questions": [
+[{"topic": "Math",
+   "desc": "This quiz covers advanced topics such as addition, subtraction, multiplication, and division.",
+   "questions": [
        {
-           "Question": "What is 2 + 2?",
-           "Answer": "2",
-           "Options": [
+           "text": "What is 2 + 2?",
+           "answer": "2",
+           "answers": [
                "2",
                "8",
                "4",
@@ -16,9 +12,9 @@
            ]
        },
        {
-           "Question": "What is 5 * 4?",
-           "Answer": "3",
-           "Options": [
+           "text": "What is 5 * 4?",
+           "answer": "3",
+           "answers": [
                "9",
                "25",
                "1",
@@ -26,9 +22,9 @@
            ]
        },
        {
-           "Question": "What is 14 - 7?",
-           "Answer": "0",
-           "Options": [
+           "text": "What is 14 - 7?",
+           "answer": "0",
+           "answers": [
                "7",
               "21",
                "100",
@@ -38,15 +34,13 @@
    ]
 },
 {
-   "Topic": "Physics",
-   "NumberOfQuestions": "3",
-   "LongDescription": "Physics is the branch of science concerned with the nature and properties of matter and energy",
-   "ShortDescription": "Various physics topics",
-   "Questions": [
+   "topic": "Physics",
+   "desc": "Physics is the branch of science concerned with the nature and properties of matter and energy",
+   "questions": [
        {
-           "Question": "What is light?",
-           "Answer": "1",
-           "Options": [
+           "text": "What is light?",
+           "answer": "1",
+           "answers": [
                "a particle",
                "a wave",
                "an energy",
@@ -54,9 +48,9 @@
            ]
        },
        {
-           "Question": "How fast does light travel?",
-           "Answer": "0",
-           "Options": [
+           "text": "How fast does light travel?",
+           "answer": "0",
+           "answers": [
                "299,792,458 m/s",
                "466,467,938 m/s",
                "~1 million mph",
@@ -64,9 +58,9 @@
            ]
        },
        {
-           "Question": "What is the unit of measurement for force?",
-           "Answer": "1",
-           "Options": [
+           "text": "What is the unit of measurement for force?",
+           "answer": "1",
+           "answers": [
                "grams",
                "Newtons",
                "Moles",
@@ -76,15 +70,13 @@
    ]
 },
 {
-    "Topic": "Marvel Super Heroes",
-    "NumberOfQuestions": "3",
-    "LongDescription": "This section covers a range of heroes from the Marvel franchise, an American media featuring various super hero films.",
-    "ShortDescription": "Various marvel topics",
-    "Questions": [
+    "topic": "Marvel Super Heroes",
+    "desc": "This section covers a range of heroes from the Marvel franchise, an American media featuring various super hero films.",
+    "questions": [
         {
-            "Question": "Which of these is NOT a Marvel hero?",
-            "Answer": "0",
-            "Options": [
+            "text": "Which of these is NOT a Marvel hero?",
+            "answer": "0",
+            "answers": [
                 "Wonder Woman",
                 "Ant Man",
                 "Spiderman",
@@ -92,9 +84,9 @@
             ]
         },
         {
-            "Question": "What is Captain Marvel's real name?",
-            "Answer": "3",
-            "Options": [
+            "text": "What is Captain Marvel's real name?",
+            "answer": "3",
+            "answers": [
                 "Mary Jane",
                 "Katniss Everdeen",
                 "Susan Johnson",
@@ -102,9 +94,9 @@
             ]
         },
         {
-            "Question": "What is Thor's weapon?",
-            "Answer": "0",
-            "Options": [
+            "text": "What is Thor's weapon?",
+            "answer": "0",
+            "answers": [
                 "a hammer",
                 "a sword",
                 "a whip",

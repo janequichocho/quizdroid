@@ -33,7 +33,7 @@ class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFra
 
 
     override fun beginQuiz(topic: String) {
-        val quizFragment = QuizFragment.newInstance(topic, 0, 0)
+        val quizFragment = QuizFragment.newInstance(topic, 0, 0, data)
         replaceFragment(quizFragment)
     }
 
@@ -49,7 +49,7 @@ class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFra
                               totalQuestions: Int) {
         if (questionIndex < totalQuestions) {
             val quizFragment = QuizFragment.newInstance(topic, questionIndex,
-                numCorrect)
+                numCorrect, data)
             replaceFragment(quizFragment)
         } else {
             val intent = Intent(this, MainActivity::class.java)
