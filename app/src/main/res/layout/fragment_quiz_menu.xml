@@ -17,13 +17,13 @@
             android:theme="@style/Base.Widget.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" app:title="Preference"/>
     <TextView
             android:text="Quiz Topics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView" android:textSize="24sp"
-            android:textColor="@android:color/black" android:layout_marginTop="32dp"
+            android:textColor="@android:color/black" android:layout_marginTop="16dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"/>
 
