@@ -54,15 +54,15 @@ class QuizDatabase: TopicRepository {
         var topics = mutableListOf<Topic>()
         // Create topics
         for (i in 0..(quizData.length() - 1)) {
-            val topicName = quizData.getJSONObject(i).get("Topic") as String
-            val shortDescription = quizData.getJSONObject(i).get("ShortDescription") as String
-            val longDescription = quizData.getJSONObject(i).get("LongDescription") as String
-            val quizQuestions = quizData.getJSONObject(i).getJSONArray("Questions")
+            val topicName = quizData.getJSONObject(i).get("topic") as String
+            val shortDescription = ""
+            val longDescription = quizData.getJSONObject(i).get("desc") as String
+            val quizQuestions = quizData.getJSONObject(i).getJSONArray("questions")
             val formattedQuestions = mutableListOf<Quiz>()
             for (i in 0..(quizQuestions.length() - 1)) {
-                val question = quizQuestions.getJSONObject(i).get("Question") as String
-                val answer = quizQuestions.getJSONObject(i).getInt("Answer")
-                val options = quizQuestions.getJSONObject(i).getJSONArray("Options")
+                val question = quizQuestions.getJSONObject(i).get("text") as String
+                val answer = quizQuestions.getJSONObject(i).getInt("answer")
+                val options = quizQuestions.getJSONObject(i).getJSONArray("answers")
                 val optionsArray = arrayListOf<String>()
                 for (i in 0..(options.length() - 1)) {
                     optionsArray.add(options.getString(i))

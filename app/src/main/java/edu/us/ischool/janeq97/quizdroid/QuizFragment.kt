@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.RadioGroup
 import android.widget.Button
 import android.content.Context
+import org.w3c.dom.Text
 
 class QuizFragment : Fragment() {
 
@@ -58,6 +59,9 @@ class QuizFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_quiz, container, false)
         var topic = arguments!!.getString("TOPIC")
+
+        val topicView: TextView = view.findViewById(R.id.topic)
+        topicView.setText(topic)
 
         val questionIndex = arguments!!.getInt("QUESTION_INDEX", 0)
         numCorrect = arguments!!.getInt("NUM_CORRECT", 0)

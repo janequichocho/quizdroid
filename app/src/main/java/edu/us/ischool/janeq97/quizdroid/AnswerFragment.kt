@@ -11,10 +11,6 @@ import android.content.Context
 
 class AnswerFragment : Fragment() {
 
-    // (result: String, yourAnswer: String, answer: String,
-    //                     questionIndex: Int, numCorrect: Int, totalQuestions: Int,
-    //                     topic: String)
-
     companion object {
 
         fun newInstance(result: String, yourAnswer: String, answer: String,
