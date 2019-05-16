@@ -16,7 +16,11 @@ class QuizActivity : AppCompatActivity(), TopicOverviewFragment.TopicOverviewFra
         setContentView(R.layout.activity_quiz)
 
         val jsonFile = assets.open("questions.json")
-        data = QuizApp.getRepositoryData(jsonFile)
+
+        val url = intent.getStringExtra("URL")
+        val downloadFreq = intent.getIntExtra("DOWNLOAD_FREQUENCY", 0)
+
+        data = QuizApp.getRepositoryData(jsonFile, this, url, downloadFreq)
 
         val topic = intent.getStringExtra("TOPIC")
         val overviewFragment = TopicOverviewFragment.newInstance(topic, data)
