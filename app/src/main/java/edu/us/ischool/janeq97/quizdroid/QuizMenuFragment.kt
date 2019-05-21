@@ -38,6 +38,7 @@ class QuizMenuFragment : Fragment() {
 
     fun selectTopic(view: View) {
         val button: Button = view as Button
+
         activityCommander?.goToTopicOverview(button.text.toString())
     }
 
